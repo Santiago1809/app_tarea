@@ -18,17 +18,28 @@ section = st.sidebar.radio(
     ],
 )
 
-PRODUCT_NAMES = ["Producto A", "Producto B", "Producto C"]
-RESOURCE_NAMES = ["Recurso 1", "Recurso 2"]
+PRODUCT_NAMES = ["Galletitas", "Chocolates", "Golosinas"]
+RESOURCE_NAMES = ["Horas de línea", "Materia prima (t azúcar/derivados)"]
+
+DISCLAIMER = (
+    "Datos unitarios estimados a partir de fuentes públicas de Arcor; "
+    "no son cifras oficiales por producto."
+)
 
 if section in ("Maximizar ganancias", "Minimizar costos"):
     st.header(section)
     if section == "Maximizar ganancias":
-        defaults = {"Precio": [50.0, 70.0, 60.0], "Costo": [30.0, 45.0, 36.0]}
+        st.caption(
+            "Ancla real: los tres segmentos principales de Arcor; precios y costos en "
+            "ARS miles por tonelada, calibrados para un margen operativo aprox. del 6 % "
+            "(resultado operativo 2025 de $293.291 millones sobre $4.902.647 millones). "
+            + DISCLAIMER
+        )
+        defaults = {"Precio": [2500.0, 4200.0, 3000.0], "Costo": [2350.0, 3950.0, 2820.0]}
         df = pd.DataFrame(defaults, index=PRODUCT_NAMES)
         edited = st.data_editor(df, use_container_width=True)
         res_df = pd.DataFrame(
-            {"Uso por unidad": [[2.0, 3.0, 2.0], [1.0, 2.0, 1.0]], "Disponible": [100.0, 60.0]},
+            {"Uso por unidad": [[2.0, 3.0, 2.0], [0.40, 0.55, 0.60]], "Disponible": [100.0, 60.0]},
             index=RESOURCE_NAMES,
         )
         st.subheader("Restricciones de recursos")
@@ -50,7 +61,14 @@ if section in ("Maximizar ganancias", "Minimizar costos"):
             else:
                 st.error(f"Sin solución: {result['message']}")
     else:
-        df = pd.DataFrame({"Costo unitario": [4.0, 5.0]}, index=["Opción 1", "Opción 2"])
+        st.caption(
+            "Ancla real: mix de insumos (ej. azúcar de Agronegocios vs. mercado externo); "
+            "costos en ARS miles por tonelada. Los montos son aproximados. " + DISCLAIMER
+        )
+        df = pd.DataFrame(
+            {"Costo unitario": [40.0, 55.0]},
+            index=["Insumo interno (Agronegocios)", "Insumo de mercado"],
+        )
         edited = st.data_editor(df, use_container_width=True)
         cons_df = pd.DataFrame(
             {"Coeficientes": [[2.0, 1.0], [1.0, 2.0]], "Requerimiento mínimo": [4.0, 4.0]},
@@ -69,32 +87,36 @@ if section in ("Maximizar ganancias", "Minimizar costos"):
             if result["success"]:
                 st.success(f"Costo óptimo: {result['optimal_value']:.2f}")
                 st.table(pd.DataFrame(
-                    {"Cantidad": result["variables"]}, index=["Opción 1", "Opción 2"]
+                    {"Cantidad": result["variables"]}, index=list(edited.index)
                 ))
             else:
                 st.error(f"Sin solución: {result['message']}")
 
 elif section == "Logística de transporte":
     st.header(section)
-    plants = ["Planta 1", "Planta 2", "Planta 3"]
-    dests = ["Destino 1", "Destino 2", "Destino 3", "Destino 4"]
+    plants = ["Arcor Arroyito (Córdoba)", "Arcor Recreo (Tucumán)", "Arcor Mar del Plata"]
+    dests = ["CABA", "Rosario", "Mendoza", "Montevideo"]
     st.subheader("Matriz de costos")
+    st.caption(
+        "Ancla real: plantas públicas de Arcor y principales centros de distribución; "
+        "costos en ARS miles por tonelada, aproximados por distancia. " + DISCLAIMER
+    )
     cost_df = pd.DataFrame(
-        [[8.0, 6.0, 10.0, 9.0], [9.0, 12.0, 13.0, 7.0], [14.0, 9.0, 16.0, 5.0]],
+        [[14.0, 6.0, 10.0, 17.0], [20.0, 15.0, 12.0, 24.0], [7.0, 9.0, 20.0, 10.0]],
         index=plants, columns=dests,
     )
     edited_costs = st.data_editor(cost_df, use_container_width=True)
     st.subheader("Oferta y demanda")
-    supply_df = pd.DataFrame({"Oferta": [35.0, 50.0, 40.0]}, index=plants)
-    demand_df = pd.DataFrame({"Demanda": [45.0, 20.0, 30.0, 30.0]}, index=dests)
+    supply_df = pd.DataFrame({"Oferta (miles de t/año)": [35.0, 50.0, 40.0]}, index=plants)
+    demand_df = pd.DataFrame({"Demanda (miles de t/año)": [45.0, 20.0, 30.0, 30.0]}, index=dests)
     c1, c2 = st.columns(2)
     edited_supply = c1.data_editor(supply_df, use_container_width=True)
     edited_demand = c2.data_editor(demand_df, use_container_width=True)
     if st.button("Resolver"):
         try:
             result = solved_transport(
-                list(edited_supply["Oferta"]),
-                list(edited_demand["Demanda"]),
+                list(edited_supply["Oferta (miles de t/año)"]),
+                list(edited_demand["Demanda (miles de t/año)"]),
                 edited_costs.values.tolist(),
             )
         except AssertionError as e:
@@ -109,13 +131,18 @@ elif section == "Logística de transporte":
 else:
     st.header(section)
     st.subheader("Datos de productos")
+    st.caption(
+        "Ancla real: escala derivada de los ingresos 2025 de Arcor "
+        "($4.902.647 millones); demandas en toneladas/año, costos en ARS miles. "
+        + DISCLAIMER
+    )
     inv_df = pd.DataFrame(
         {
-            "Demanda anual": [1000.0, 2500.0, 600.0],
-            "Costo de pedido": [10.0, 15.0, 12.0],
-            "Costo de mantenimiento": [0.5, 0.8, 1.2],
-            "Desvío estándar diario": [5.0, 8.0, 3.0],
-            "Demanda diaria promedio": [20.0, 50.0, 12.0],
+            "Demanda anual (t)": [12000.0, 8000.0, 6000.0],
+            "Costo de pedido (miles ARS)": [150.0, 180.0, 160.0],
+            "Costo de mantenimiento (miles ARS/t·año)": [40.0, 70.0, 50.0],
+            "Desvío estándar diario (t)": [6.0, 4.0, 3.0],
+            "Demanda diaria promedio (t)": [33.0, 22.0, 17.0],
             "Tiempo de entrega (días)": [4.0, 6.0, 5.0],
         },
         index=PRODUCT_NAMES,
@@ -126,11 +153,11 @@ else:
         products = [
             {
                 "name": name,
-                "demand_per_year": row["Demanda anual"],
-                "order_cost": row["Costo de pedido"],
-                "holding_cost": row["Costo de mantenimiento"],
-                "demand_std": row["Desvío estándar diario"],
-                "avg_daily_demand": row["Demanda diaria promedio"],
+                "demand_per_year": row["Demanda anual (t)"],
+                "order_cost": row["Costo de pedido (miles ARS)"],
+                "holding_cost": row["Costo de mantenimiento (miles ARS/t·año)"],
+                "demand_std": row["Desvío estándar diario (t)"],
+                "avg_daily_demand": row["Demanda diaria promedio (t)"],
                 "lead_time": row["Tiempo de entrega (días)"],
             }
             for name, row in edited.iterrows()

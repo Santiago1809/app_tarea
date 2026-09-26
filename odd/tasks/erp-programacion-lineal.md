@@ -26,8 +26,16 @@ Fuera de scope: auth, base de datos persistente, multi-empresa, más de 3 produc
 | t5 | README con fórmulas y modo de uso + cierre | inline | readback |
 
 ## Progreso
-- [ ] t1 — LP core
-- [ ] t2 — transporte
-- [ ] t3 — abastecimiento (Q*, SS)
-- [ ] t4 — app Streamlit
-- [ ] t5 — README + cierre
+- [x] t1 — LP core (pytest: 7 passed) — commit 56e17ec
+- [x] t2 — transporte (ídem) — commit 56e17ec
+- [x] t3 — abastecimiento (ídem) — commit 56e17ec
+- [x] t4 — app Streamlit (healthz 200) — commit 56e17ec
+- [x] t5 — README + cierre — incluido en commit 56e17ec
+- [ ] t6 — datos reales (Arcor) adaptados a las 4 secciones + disclaimer de aproximación | delegado | pytest + healthz
+
+## Verificación
+- Writer: pytest 7 passed; streamlit healthz 200.
+- Verificador independiente: PASS los 7 checks, fórmulas EOQ/SS/transporte/LP recomputadas, sin defectos.
+- RDD: off (decisión global del usuario). Assessment: unassessable→tier alto por untracked; cubierto con verificador independiente.
+
+## Estado: COMPLETO
