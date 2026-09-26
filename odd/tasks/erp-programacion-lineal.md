@@ -31,7 +31,8 @@ Fuera de scope: auth, base de datos persistente, multi-empresa, más de 3 produc
 - [x] t3 — abastecimiento (ídem) — commit 56e17ec
 - [x] t4 — app Streamlit (healthz 200) — commit 56e17ec
 - [x] t5 — README + cierre — incluido en commit 56e17ec
-- [ ] t6 — datos reales (Arcor) adaptados a las 4 secciones + disclaimer de aproximación | delegado | pytest + healthz
+- [x] t6 — datos reales (Arcor) adaptados — commit 7d9c0ab; verificador independiente PASS, pytest 7 passed, healthz 200
+
 
 ## Verificación
 - Writer: pytest 7 passed; streamlit healthz 200.
