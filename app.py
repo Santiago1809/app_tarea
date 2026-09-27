@@ -32,7 +32,6 @@ st.markdown(
         font-family: 'Plus Jakarta Sans', sans-serif;
       }
       #MainMenu, footer, header { visibility: hidden; }
-
       /* ---------- Hero ---------- */
       .eyebrow {
         display: inline-block;
@@ -64,7 +63,6 @@ st.markdown(
         max-width: 44rem;
         margin-top: 0.9rem;
       }
-
       /* ---------- Sidebar ---------- */
       section[data-testid="stSidebar"] {
         background: rgba(10, 10, 12, 0.82);
@@ -72,7 +70,6 @@ st.markdown(
         border-right: 1px solid var(--hairline);
       }
       section[data-testid="stSidebar"] * { font-family: 'Plus Jakarta Sans', sans-serif; }
-
       /* ---------- Cards / editors / tables ---------- */
       div[data-testid="stDataFrame"], div[data-testid="stDataEditor"],
       div[data-testid="stMetric"], div[data-testid="stAlert"] {
@@ -90,11 +87,9 @@ st.markdown(
       div[data-testid="stMetric"] { padding: 1.2rem 1.4rem; }
       div[data-testid="stMetric"] label { color: var(--muted); font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; }
       div[data-testid="stMetric"] [data-testid="stMetricValue"] { font-weight: 800; letter-spacing: -0.03em; font-size: 2rem; color: var(--accent); }
-
       /* ---------- Typography ---------- */
       h2, h3 { font-weight: 700; letter-spacing: -0.02em; }
       [data-testid="stCaptionContainer"] { color: var(--muted); font-weight: 300; }
-
       /* ---------- Buttons ---------- */
       button[kind="primary"], button[kind="secondary"], .stButton button {
         border-radius: 999px !important;
@@ -110,7 +105,6 @@ st.markdown(
         border: none !important;
         box-shadow: 0 8px 24px rgba(231, 64, 43, 0.35);
       }
-
       /* ---------- Entry animation ---------- */
       @keyframes rise {
         from { opacity: 0; transform: translateY(1.5rem); filter: blur(6px); }
@@ -119,7 +113,6 @@ st.markdown(
       .main .block-container > * { animation: rise 0.8s var(--ease-premium) both; }
       .main .block-container > *:nth-child(2) { animation-delay: 0.08s; }
       .main .block-container > *:nth-child(3) { animation-delay: 0.16s; }
-
       /* ---------- Scrollbar ---------- */
       ::-webkit-scrollbar { width: 8px; height: 8px; }
       ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 99px; }
