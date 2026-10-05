@@ -5,7 +5,7 @@ from abastecimiento import eoq, safety_stock
 from lp_core import maximize_profits, minimize_costs
 from transporte import solved_transport
 
-st.set_page_config(page_title="Arcor Ops Planner", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="Arcor Ops Planner", layout="wide", initial_sidebar_state="auto")
 
 st.markdown(
     """
@@ -56,6 +56,7 @@ st.markdown(
         background-clip: text;
         color: transparent;
       }
+      .hero { padding: clamp(1.5rem, 4vw, 3rem) 0 1rem; }
       .hero p {
         color: var(--muted);
         font-size: 1.05rem;
@@ -73,18 +74,25 @@ st.markdown(
       /* ---------- Cards / editors / tables ---------- */
       div[data-testid="stDataFrame"], div[data-testid="stDataEditor"],
       div[data-testid="stMetric"], div[data-testid="stAlert"] {
-        background: var(--card);
-        border: 1px solid var(--hairline);
-        border-radius: 1.25rem;
-        box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+        background: linear-gradient(180deg, var(--card-2), var(--card));
+        border: none;
+        border-radius: 1.75rem;
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.06),
+          0 0 0 7px rgba(255, 255, 255, 0.025),
+          inset 0 1px 1px rgba(255, 255, 255, 0.07);
+        margin: 0.6rem;
         padding: 0.5rem;
-        transition: transform 0.5s var(--ease-premium), border-color 0.5s var(--ease-premium);
+        transition: transform 0.7s var(--ease-premium), box-shadow 0.7s var(--ease-premium);
       }
       div[data-testid="stDataFrame"]:hover, div[data-testid="stMetric"]:hover {
         transform: translateY(-2px);
-        border-color: rgba(255, 255, 255, 0.16);
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.14),
+          0 0 0 7px rgba(255, 255, 255, 0.04),
+          inset 0 1px 1px rgba(255, 255, 255, 0.12);
       }
-      div[data-testid="stMetric"] { padding: 1.2rem 1.4rem; }
+      div[data-testid="stMetric"] { padding: 1.4rem 1.6rem; }
       div[data-testid="stMetric"] label { color: var(--muted); font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; }
       div[data-testid="stMetric"] [data-testid="stMetricValue"] { font-weight: 800; letter-spacing: -0.03em; font-size: 2rem; color: var(--accent); }
       /* ---------- Typography ---------- */
@@ -93,13 +101,13 @@ st.markdown(
       /* ---------- Buttons ---------- */
       button[kind="primary"], button[kind="secondary"], .stButton button {
         border-radius: 999px !important;
-        padding: 0.55rem 1.6rem !important;
+        padding: 0.65rem 1.8rem !important;
         font-weight: 600 !important;
         letter-spacing: 0.02em;
-        transition: all 0.4s var(--ease-premium) !important;
+        transition: transform 0.6s var(--ease-premium), background-color 0.4s var(--ease-premium), box-shadow 0.6s var(--ease-premium) !important;
       }
       .stButton button:hover { transform: translateY(-1px) scale(1.02); }
-      .stButton button:active { transform: scale(0.97); }
+      .stButton button:active { transform: scale(0.98); }
       .stButton button[kind="primary"] {
         background: var(--accent) !important;
         border: none !important;
@@ -107,8 +115,8 @@ st.markdown(
       }
       /* ---------- Entry animation ---------- */
       @keyframes rise {
-        from { opacity: 0; transform: translateY(1.5rem); filter: blur(6px); }
-        to   { opacity: 1; transform: translateY(0); filter: blur(0); }
+        from { opacity: 0; transform: translateY(2rem); }
+        to   { opacity: 1; transform: translateY(0); }
       }
       .main .block-container > * { animation: rise 0.8s var(--ease-premium) both; }
       .main .block-container > *:nth-child(2) { animation-delay: 0.08s; }
@@ -117,6 +125,35 @@ st.markdown(
       ::-webkit-scrollbar { width: 8px; height: 8px; }
       ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 99px; }
       ::-webkit-scrollbar-track { background: transparent; }
+      /* ---------- Sidebar nav as pills ---------- */
+      section[data-testid="stSidebar"] label[data-testid="stRadioOption"] {
+        border: 1px solid transparent;
+        border-radius: 999px;
+        padding: 0.6rem 1rem;
+        transition: background-color 0.5s var(--ease-premium), border-color 0.5s var(--ease-premium);
+      }
+      section[data-testid="stSidebar"] label[data-testid="stRadioOption"]:hover { background: rgba(255, 255, 255, 0.04); }
+      section[data-testid="stSidebar"] label[data-testid="stRadioOption"][data-selected="true"] {
+        background: var(--accent-soft);
+        border-color: rgba(231, 64, 43, 0.35);
+      }
+      section[data-testid="stSidebar"] label[data-testid="stRadioOption"] > div:first-child > div:first-child { display: none; }
+      /* ---------- Grain (fixed, non-interactive) ---------- */
+      .stApp::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0.035;
+        background-image: url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      }
+      /* ---------- Mobile (<768px): single column, 16px gutter ---------- */
+      @media (max-width: 768px) {
+        .main .block-container { padding-left: 1rem; padding-right: 1rem; padding-top: 2.5rem; }
+        .hero h1 { font-size: 2.2rem; }
+        div[data-testid="stMetric"] [data-testid="stMetricValue"] { font-size: 1.6rem; }
+      }
     </style>
     """,
     unsafe_allow_html=True,
