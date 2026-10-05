@@ -1,6 +1,6 @@
-# ERP — Programación Lineal (3 productos)
+# ERP — Programación Lineal (5 productos)
 
-App web (Streamlit) para una empresa con 3 productos que resuelve problemas de
+App web (Streamlit) para una empresa con 5 productos que resuelve problemas de
 investigación de operaciones:
 
 - **Maximización de ganancias** — LP de producción con restricciones de recursos
@@ -15,7 +15,7 @@ investigación de operaciones:
 ```
 
 Abre en el navegador y elegí la sección en la barra lateral. Los datos de ejemplo
-(3 productos: A, B, C) son editables.
+(5 segmentos: Galletitas, Chocolates, Golosinas, Alfajores, Cereales) son editables.
 
 ## Tests
 
@@ -39,6 +39,12 @@ Sección "Fuentes":
   líder regional en galletas, alfajores y cereales.
 - https://www.arcor.com/ar/nuestros-negocios — público: Agronegocios produce internamente
   azúcar, fructosa, glucosa, almidón y harina de maíz (integración vertical).
+- https://www.arcor.com/ar/plantas-industriales — público: 24 plantas en Argentina, entre
+  ellas San Luis, Villa Mercedes, Colonia Caroya y La Reducción.
+- Alfajores: Bagley (Arcor 51 %, Danone 49 %) lidera el mercado; ver
+  https://alfajor.com.ar/marcas.
+- Cereales: Arcor lanzó su línea de cereales en 2012 (Grupo Arcor, Wikipedia:
+  https://en.wikipedia.org/wiki/Grupo_Arcor).
 
 Estimado (no oficial): precios y costos unitarios por tonelada calibrados para un
 margen operativo aproximado del 6 %, capacidades de planta, demandas anuales por

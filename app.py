@@ -127,8 +127,8 @@ st.markdown(
     <div class="hero">
       <span class="eyebrow">Investigación de Operaciones · Arcor</span>
       <h1>Optimizador de operaciones</h1>
-      <p>Programación lineal, transporte y abastecimiento sobre los tres segmentos
-         principales: galletitas, chocolates y golosinas.</p>
+      <p>Programación lineal, transporte y abastecimiento sobre cinco segmentos
+         principales: galletitas, chocolates, golosinas, alfajores y cereales.</p>
     </div>
     """,
     unsafe_allow_html=True,
@@ -145,7 +145,7 @@ section = st.sidebar.radio(
     ],
 )
 
-PRODUCT_NAMES = ["Galletitas", "Chocolates", "Golosinas"]
+PRODUCT_NAMES = ["Galletitas", "Chocolates", "Golosinas", "Alfajores", "Cereales"]
 RESOURCE_NAMES = ["Horas de línea", "Materia prima (t azúcar/derivados)"]
 
 DISCLAIMER = (
@@ -157,16 +157,25 @@ if section in ("Maximizar ganancias", "Minimizar costos"):
     st.header(section)
     if section == "Maximizar ganancias":
         st.caption(
-            "Ancla real: los tres segmentos principales de Arcor; precios y costos en "
+            "Ancla real: los cinco segmentos principales de Arcor; precios y costos en "
             "ARS miles por tonelada, calibrados para un margen operativo aprox. del 6 % "
             "(resultado operativo 2025 de $293.291 millones sobre $4.902.647 millones). "
             + DISCLAIMER
         )
-        defaults = {"Precio": [2500.0, 4200.0, 3000.0], "Costo": [2350.0, 3950.0, 2820.0]}
+        defaults = {
+            "Precio": [2500.0, 4200.0, 3000.0, 3600.0, 2800.0],
+            "Costo": [2350.0, 3950.0, 2820.0, 3390.0, 2630.0],
+        }
         df = pd.DataFrame(defaults, index=PRODUCT_NAMES)
         edited = st.data_editor(df, width="stretch")
         res_df = pd.DataFrame(
-            {"Uso por unidad": [[2.0, 3.0, 2.0], [0.40, 0.55, 0.60]], "Disponible": [100.0, 60.0]},
+            {
+                "Uso por unidad": [
+                    [2.0, 3.0, 2.0, 2.5, 1.8],
+                    [0.40, 0.55, 0.60, 0.50, 0.35],
+                ],
+                "Disponible": [100.0, 60.0],
+            },
             index=RESOURCE_NAMES,
         )
         st.subheader("Restricciones de recursos")
@@ -265,12 +274,12 @@ else:
     )
     inv_df = pd.DataFrame(
         {
-            "Demanda anual (t)": [12000.0, 8000.0, 6000.0],
-            "Costo de pedido (miles ARS)": [150.0, 180.0, 160.0],
-            "Costo de mantenimiento (miles ARS/t·año)": [40.0, 70.0, 50.0],
-            "Desvío estándar diario (t)": [6.0, 4.0, 3.0],
-            "Demanda diaria promedio (t)": [33.0, 22.0, 17.0],
-            "Tiempo de entrega (días)": [4.0, 6.0, 5.0],
+            "Demanda anual (t)": [12000.0, 8000.0, 6000.0, 7000.0, 4000.0],
+            "Costo de pedido (miles ARS)": [150.0, 180.0, 160.0, 170.0, 140.0],
+            "Costo de mantenimiento (miles ARS/t·año)": [40.0, 70.0, 50.0, 60.0, 45.0],
+            "Desvío estándar diario (t)": [6.0, 4.0, 3.0, 3.5, 2.5],
+            "Demanda diaria promedio (t)": [33.0, 22.0, 17.0, 19.0, 11.0],
+            "Tiempo de entrega (días)": [4.0, 6.0, 5.0, 5.0, 6.0],
         },
         index=PRODUCT_NAMES,
     )

@@ -13,6 +13,18 @@ def test_maximize_profits_three_products():
     assert res["optimal_value"] == pytest.approx(200, abs=1e-5)
 
 
+def test_maximize_profits_five_products():
+    # max 1x1+2x2+3x3+4x4+5x5 s.t. sum(x) <= 10, x5 <= 4 -> x5=4, x4=6 -> 44
+    res = solve_lp(
+        [1, 2, 3, 4, 5], sense="max",
+        A_ub=[[1, 1, 1, 1, 1], [0, 0, 0, 0, 1]], b_ub=[10, 4],
+    )
+    assert res["success"]
+    assert res["variables"][3] == pytest.approx(6, abs=1e-5)
+    assert res["variables"][4] == pytest.approx(4, abs=1e-5)
+    assert res["optimal_value"] == pytest.approx(44, abs=1e-5)
+
+
 def test_infeasible_reports_status():
     res = solve_lp([1, 1], sense="min", A_ub=[[-1, -1], [1, 1]], b_ub=[-10, 5])
     assert not res["success"]
