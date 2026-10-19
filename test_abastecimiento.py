@@ -1,6 +1,8 @@
+import numpy as np
 import pytest
 
 from abastecimiento import eoq, safety_stock
+from datos_eva import get_product_data
 
 
 def test_eoq_classic():
@@ -18,3 +20,15 @@ def test_safety_stock_known_z():
     )
     assert res[0]["safety_stock"] == pytest.approx(10, abs=1e-6)
     assert res[0]["reorder_point"] == pytest.approx(90, abs=1e-6)
+
+
+def test_daily_std_from_historical_series():
+    # App-side rule: daily_std = sample std of the historical production / 365.
+    # No CV ratio is involved.
+    prod = get_product_data("Café")["production"]
+    daily_std = float(np.std(prod, ddof=1) / 365)
+    assert daily_std == pytest.approx(230.7266, abs=1e-3)
+
+    # Same unit as the daily demand derived from the latest production.
+    daily_demand = prod[-1] / 365
+    assert daily_std < daily_demand
